@@ -1,0 +1,334 @@
+ <!-- Modal -->
+    <div id="modalCheck" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 700px;">
+            <div id="modalContent" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="titulo_tarefa">Titulo</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 74%; float: left;"  id="content-left">
+
+                    </div>
+
+                    <div style="width: 24%; float: right; margin-left: 10px;">
+                        <h5>Ações</h5>          
+                        <button class="btn btn-primary notify btn-sm btn-custom" data-dismiss="modal" aria-hidden="true">Finalizar</button>
+                        <button class="btn notify btn-default btn-sm btn-custom" id="box-arquivo">Anexar Arquivo</button>
+                        <button class="btn notify btn-default btn-sm btn-custom" id="box-checklist">Add Checklist</button>
+
+                        <div class="box-checklist">
+                            <h5 style="text-align: center; border-bottom: 1px solid #CCC">Add Checklist</h5>
+                            <button class="fechar-box-checklist">X</button>
+                            <?= $this->formcheck; ?>
+                        </div>
+                        <div id="box-checklist-descricao" class="box-checklist-descricao">
+                            <h5 style="text-align: center; border-bottom: 1px solid #CCC">Add Item</h5>
+                            <button class="fechar-box-checklist">X</button>
+                            <?= $this->formItems; ?>
+                        </div>
+
+                    </div>  
+                </div>
+                <div style="clear: both;">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--FINAL DA LISTAGEM 01-->
+
+<!-- end Modal -->
+                        
+<div class="modal fade" id='modal-box-arquivo' style='height: 537px; background: white; width: 70%; margin-left: 15%' role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">   
+    <h5 style="text-align: center; border-bottom: 1px solid #CCC">Upload de Arquivos</h5>
+    <button class="fechar-box-arquivo">X</button>
+    <div id='tar_codigo_imagem' value='' style='height:0px;width: 0px;'></div>
+    <!-- 1. ng-file-drop | ng-file-drop="options" -->
+    <div ng-controller="TestController" ng-file-drop>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <h4>Selecionar Arquivos </h4>
+
+                    <div ng-show="uploader.isHTML5">
+                        <!-- 3. ng-file-over | ng-file-over="className" -->
+                        <div class="well my-drop-zone" ng-file-over>
+                            Click, Arraste e solte!
+                        </div>
+
+                    </div>
+
+                    <!-- 2. ng-file-select | ng-file-select="options" -->
+                    Múltiplos
+                    <input ng-file-select type="file" multiple class="button-file" /><br/>
+
+                    Único
+                    <input ng-file-select type="file" class="button-file"/>
+                </div>
+
+                <div class="col-md-9" style="margin-bottom: 40px">
+
+                    <h3>Fila de Upload</h3>
+                    <p>Tamanho da Fila: {{ uploader.queue.length }}</p>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Nome</th>
+                                <th ng-show="uploader.isHTML5">Tam.</th>
+                                <th ng-show="uploader.isHTML5">Progresso</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                                <td><strong>{{ item.file.name }}</strong></td>
+                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td ng-show="uploader.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Enviar
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancelar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remover
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <p>
+                            Progesso da Fila:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </p>
+                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                            <span class="glyphicon glyphicon-upload"></span> Enviar Todos
+                        </button>
+                        <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancelar Todos
+                        </button>
+                        <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                            <span class="glyphicon glyphicon-trash"></span> Remover Todos
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>      
+<!-- End modal BoxAquivo -->
+</div>
+
+
+                     
+<div style='height: 530px; background: white; width: 70%; margin-left: 15%;' id='modal-box-imagem' class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+    <h5 style="text-align: center; border-bottom: 1px solid #CCC">Lista de Arquivos</h5>
+    <button class="fechar-box-arquivo fechar-box-arquivo-imagem">X</button>
+
+              <div class="widget wred">
+                <div class="widget-head">
+                  <div class="pull-left">Arquivos</div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="widget-content medias">
+                  
+                  <table class="table table-bordered ">
+                      <thead>
+                        <tr>
+                          <th>
+                              <input type="checkbox" value="check1">
+                          </th>
+                          <th>Media</th>
+                          <th>Name</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <? foreach ($this->lista_imagens as $imagem): ?>
+                        <tr>
+                          <td>                  
+                              <input type="checkbox" value="check1">
+                          </td>
+                          <td><img src="<?= $this->baseUrl() ?>/upload/tarefa/<?= $imagem->tar_imagem ?>" alt=""></td>
+                          <td><a href="<?= $this->baseUrl() ?>/upload/tarefa/<?= $imagem->tar_imagem ?>" target='blank'><?= $imagem->tar_imagem ?></td>
+                          <td>
+                              <button class="btn btn-sm btn-danger tar_imagem_remove" value='<?= $imagem->tar_imagem_codigo ?>' ><i class="icon-remove"></i> </button>                          
+                          </td>
+                        </tr>
+
+        
+                    <? endforeach; ?>  
+                                                         
+
+                      </tbody>
+                    </table>
+
+                </div>
+
+                    <div class="widget-foot">
+
+                      <div class="pull-left">
+                        <select class="form-control">
+                          <option>Actions</option>
+                          <option>Edit</option>
+                          <option>Delete</option>
+                        </select>
+                      </div>
+
+                      <div class="clearfix"></div> 
+
+                    </div>
+              </div>  
+</div>
+
+<!-- Modal status -->
+<div id="modal-status" class="modal fade" role="dialog" style='height: 80%' aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 780px;">
+        <div id="modalContent" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="titulo_tarefa">Status da atividade</h4>
+            </div>
+            <div class="modal-body">
+                <div style="width: 100%; float: left;"  id="content-left">
+                    <form class="form-inline" role="form">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios0" value="0" checked>
+                                <span class="label label-danger">Não iniciado</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="1">
+                                <span class="label label-info">Iniciado</span>
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="2">
+                                <span class="label label-success">Concluído</span>
+                            </label>
+                        </div>
+
+                        <input type="hidden" name="id-tarefa" id="id-tarefa" value=""/>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="3">
+                                <span class="label label-default" >Parado</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios4" value="4">
+                                <span class="label label-warning" >Refazendo</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios5" value="5">
+                                <span class="label label-primary" >Aprovação</span>
+                            </label>
+                        </div>
+                        <input type="hidden" name="id-tarefa" id="id-tarefa" value=""/>        
+                    </form>
+                </div>
+
+                <div style="width: 24%; float: right; margin-left: 10px;">
+                    <h5>Ações</h5>          
+                    <button class="btn btn-primary notify btn-sm btn-custom" data-dismiss="modal" aria-hidden="true">Finalizar</button>
+
+                </div>  
+            </div>
+            <div style="clear: both;">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Lista de status-->
+<!-- Modal -->
+<div id="modal-lista-status" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 780px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Lista de status Tarefa | 
+                    <span id="desligar">Finalizar 
+                        <div class="make-switch" data-on="success" data-off="warning" id="tar-status-button">
+                            <input  type="checkbox" id="value-tar-status" value=""/>
+                        </div>
+                     </span>
+                </h4>
+            </div>
+            <div id="content-geral-list-tarefas" class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="continuar">Continuar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- end Modal -->
+
+<!-- Modal Exclusão -->
+<div id="modal-exclusao" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">Deseja Excluir os Dados Dessa Tarefa?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Caso deseje excluir, serão excluídos 
+                   <br><b>A Tarefa Relacionada </b>
+                   <br><b>Os Checklists </b>
+                   <br><b>Os itens do Checklist </b>
+                   <br><b>O Histórico da Tarefa </b>
+                </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+              <button type="button" class="btn btn-primary" id='btn-send-excluir'>Excluir Dados</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

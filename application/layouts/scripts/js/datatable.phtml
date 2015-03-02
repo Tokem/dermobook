@@ -1,0 +1,438 @@
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        
+        var afazer =   $('#list-tarefas-afazer').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            // "sDom": 'T<"clear">lfrtip',
+            // "oTableTools": {
+            //   "sSwfPath": "../media/swf/copy_csv_xls_pdf.swf"
+            // },
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],
+            "aaSorting" : [[0, 'desc']],
+            "bStateSave": true,    
+            
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+
+        $(".verify").on('click',function(){
+              if($(this).hasClass( "ch01" )){
+                $("input[type='checkbox'][name='ch01[]']", afazer.fnGetNodes()).prop("checked", true);
+                $(".ch01").html("UC");
+                $(".ch01").removeClass('ch01').addClass('dc01');
+              }else{
+                $("input[type='checkbox'][name='ch01[]']", afazer.fnGetNodes()).removeAttr("checked");
+                $(".dc01").html("CH");
+                $(".dc01").removeClass('dc01').addClass('ch01');
+              }
+        })
+
+
+        //Acões em massa
+    $(document).ready(function(){
+
+        $(".change-user").on('click', function(){
+            var action = $(this).attr('acao');
+            var tarefas = new Array();
+
+            //A fazer
+            if($(this).hasClass('afazer') || $(this).hasClass('resultado') ){
+                $("input[type='checkbox'][name='ch01[]']").each(function(e){                  
+                    var checked = (this.checked ? "1" : "0");
+                    if(checked==1){
+                      tarefas.push($(this).val()); 
+                    }
+                });
+            } else if($(this).hasClass('andamento')){
+                $("input[type='checkbox'][name='ch02[]']").each(function(e){
+                    var checked = (this.checked ? "1" : "0");
+                    if(checked==1){
+                        tarefas.push($(this).val()); 
+                    }
+                });
+
+            }else if($(this).hasClass('atrasados')){
+                $("input[type='checkbox'][name='ch03[]']").each(function(e){
+                    var checked = (this.checked ? "1" : "0");
+                    if(checked==1){
+                        tarefas.push($(this).val()); 
+                    }
+                });
+            }else if($(this).hasClass('concluidos')){
+                $("input[type='checkbox'][name='ch04[]']").each(function(e){
+                    var checked = (this.checked ? "1" : "0");
+                    if(checked==1){
+                        tarefas.push($(this).val()); 
+                    }
+                });
+
+            }else if($(this).hasClass('finalizados')){
+                $("input[type='checkbox'][name='ch05[]']").each(function(e){
+                    var checked = (this.checked ? "1" : "0");
+                    if(checked==1){
+                        tarefas.push($(this).val()); 
+                    }
+                });
+            }
+
+
+            if(tarefas.length > 0){
+                // prompt dialog
+                alertify.prompt("Deseja Alterar todos usuários das tarefas selecionadas para?", function (e, str) {
+                    // str is the input text
+                    if (e) {                
+                      $.ajax({
+                          url: "<?= $this->baseUrl() ?>/tarefa/acmassa",
+                          data:{
+                            acao: "mudar_usuario", 
+                            codigos: tarefas,
+                            usuario: str
+                          },
+                          type: 'post',
+                          success: function(res) {            
+                              alertify.success("Ação realizada com sucesso!");
+                              setTimeout(function(){location.reload()}, 3000);
+                              return false;    
+                          }, error: function(e) {
+                              return false
+                          }
+                      });
+                    }
+                }, "");
+                
+                $.ajax({
+                    url: "<?= $this->baseUrl() ?>/usuario/listarajax",
+                    type: 'post',
+                    success: function(res) {            
+                        var rsult = jQuery.parseJSON(res);
+
+                        for (var i=0;i<rsult.length;i++){                          
+                            $('#alertify-text').append('<option value="'+rsult[i].cli_codigo+'">'+rsult[i].cli_nome+'</option>');
+                        }
+                    }, error: function(e) {
+                        return false
+                    }
+                });
+
+            }
+        });
+
+        $(".verifiy-action").on('click',function(){
+           var action = $(this).attr('acao');
+           var tarefas = new Array();
+           var mensage = null;
+
+           //A fazer
+           if($(this).hasClass('afazer')){
+             $("input[type='checkbox'][name='ch01[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+
+                });
+            //Andamento       
+           }else if($(this).hasClass('andamento')){
+                $("input[type='checkbox'][name='ch02[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+
+                });
+           }else if($(this).hasClass('atrasados')){
+                $("input[type='checkbox'][name='ch03[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+
+                });
+           }else if($(this).hasClass('concluidos')){
+                $("input[type='checkbox'][name='ch04[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+
+                });
+           }else if($(this).hasClass('finalizados')){
+                $("input[type='checkbox'][name='ch05[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+
+                });
+           }else if($(this).hasClass('resultado')){
+                $("input[type='checkbox'][name='chr01[]']").each(function(e){
+                  
+                  var checked = (this.checked ? "1" : "0");
+                  if(checked==1){
+                    tarefas.push($(this).val()); 
+                  }
+                });
+            }
+                                
+
+                switch(action){
+                    case 'excluir':
+                        mensage = "excluir esta(s) tarefa(s)? todo histórico será perdido";
+                    break;
+                    case 'finalizar':
+                        mensage = "finalizar esta(s) tarefa(s)?";
+                    break;
+                    case 'desligar':
+                        mensage = "desligar esta(s) tarefa(s)?";
+                    break;
+                    case 'ligar':
+                        mensage = "ligar esta(s) tarefa(s)?";
+                    break;
+                    case 'nao-iniciar':
+                        mensage = "não iniciar esta(s) tarefa(s)?";
+                    break;
+                    case 'iniciar':
+                        mensage = "iniciar esta(s) tarefa(s)?";
+                    break;
+                    case 'concluir':
+                        mensage = "concluir esta(s) tarefa(s)?";
+                    break;
+                    case 'parar':
+                        mensage = "parar esta(s) tarefa(s)?";
+                    break;
+                    case 'refazer':
+                        mensage = "refazer esta(s) tarefa(s)?";
+                    break;
+
+                } 
+
+                alertify.confirm("Deseja "+mensage, function (retorno) {
+                    if (retorno) {
+                        $.ajax({
+                            url: "<?= $this->baseUrl() ?>/tarefa/acmassa",
+                            type: 'post',
+                            data: {
+                                codigos: tarefas,
+                                acao: action,
+                                permissao:"<?php echo $identity->cli_permissao ?>",
+                            }, beforeSend: function() {
+                            }, success: function(e) {                                            
+                                if(e==1){
+                                  alertify.success("Ação realizada com sucesso!");
+                                  setTimeout(function(){location.reload()}, 3000);
+                                  return false;      
+                                }else{
+                                    alertify.error("Ocorreu um erro na aplicação!");
+                                }
+                                 
+                            }, error: function(e) {
+                                console.log(e);
+                                return false
+                            }
+                        })
+                    } else {
+                      alertify.error("Operação cancelada pelo usuário!");
+                    }
+                });
+
+          })
+      })
+    });
+
+
+    
+    $(document).ready(function() {
+       var atrasados = $('#list-tarefas-atrasados').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            "aaSorting" : [[0, 'desc']],
+            "bStateSave": true,
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],    
+            // "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+
+       $(".verify").on('click',function(){
+              if($(this).hasClass( "ch03" )){
+                console.log($(this).hasClass( "ch03" ))
+                $("input[type='checkbox'][name='ch03[]']", atrasados.fnGetNodes()).prop("checked", true);
+                console.log($("input[type='checkbox'][name='ch03[]']", atrasados.fnGetNodes()).prop("checked", true))
+                $(".ch03").html("UC");
+                $(".ch03").removeClass('ch03').addClass('dc03');
+              }else{
+                $("input[type='checkbox'][name='ch03[]']", atrasados.fnGetNodes()).removeAttr("checked");
+                $(".dc03").html("CH");
+                $(".dc03").removeClass('dc03').addClass('ch03');
+              }
+        })
+
+    });
+    
+    
+    $(document).ready(function() {
+        var concluidos =  $('#list-tarefas-concluidos').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            "aaSorting" : [[0, 'desc']],
+            "bStateSave": true,
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],    
+            // "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+
+        $(".verify").on('click',function(){
+              if($(this).hasClass( "ch04" )){
+                $("input[type='checkbox'][name='ch04[]']", concluidos.fnGetNodes()).prop("checked", true);
+                $(".ch04").html("UC");
+                $(".ch04").removeClass('ch04').addClass('dc04');
+              }else{
+                $("input[type='checkbox'][name='ch04[]']", concluidos.fnGetNodes()).removeAttr("checked");
+                $(".dc04").html("CH");
+                $(".dc04").removeClass('dc04').addClass('ch04');
+              }
+        })
+
+    });
+    
+    $(document).ready(function() {
+       var finalizados =  $('#list-tarefas-finalizados').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            "bStateSave": true,
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],
+            "aaSorting" : [[0, 'desc']],    
+            // "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+
+       $(".verify").on('click',function(){
+              if($(this).hasClass( "ch05" )){
+                $("input[type='checkbox'][name='ch05[]']", finalizados.fnGetNodes()).prop("checked", true);
+                $(".ch05").html("UC");
+                $(".ch05").removeClass('ch05').addClass('dc05');
+              }else{
+                $("input[type='checkbox'][name='ch05[]']", finalizados.fnGetNodes()).removeAttr("checked");
+                $(".dc05").html("CH");
+                $(".dc05").removeClass('dc05').addClass('ch05');
+              }
+        })
+
+    });
+    $(document).ready(function() {
+        var andamento = $('#list-tarefas-andamento').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            "bStateSave": true,
+            "aaSorting" : [[0, 'desc']],
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],    
+            // "sDom": "<'row-fluid'<'span6'T><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+
+        $(".verify").on('click',function(){
+              if($(this).hasClass( "ch02" )){
+                $("input[type='checkbox'][name='ch02[]']", andamento.fnGetNodes()).prop("checked", true);
+                $(".ch02").html("UC");
+                $(".ch02").removeClass('ch02').addClass('dc02');
+              }else{
+                $("input[type='checkbox'][name='ch02[]']", andamento.fnGetNodes()).removeAttr("checked");
+                $(".dc02").html("CH");
+                $(".dc02").removeClass('dc02').addClass('ch02');
+              }
+        })        
+
+    });
+
+    $(function(){
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          
+          var tab = $(e.target).attr('href');
+
+          $.ajax({
+                url: "<?= $this->baseUrl() ?>/tarefa/aba",
+                type: 'post',
+                data: {
+                    aba: tab,
+                }, beforeSend: function() {
+                }, success: function(e) {
+                     
+                }, error: function(e) {
+                    console.log(e);
+                    return false
+                }
+            })
+
+        })
+    })
+    
+
+    //Botões em linha
+    $(".btn-line").on('click',function(){
+
+        var status = $(this).attr('status');
+        var caminho = "<?php echo $this->url(array('action' => 'status', 'controller' => 'tarefa')); ?>";
+        var codigoUsuario = <?php echo $identity->cli_codigo ?>;
+        var permissaoUsiario ="<?php echo $identity->cli_permissao ?>";
+        var tarefa = $(this).attr('ln-codigo');
+        var nome = "<?php echo $identity->cli_nome ?>";
+
+            alertify.confirm("Deseja alterar o status desta tarefa?", function (retorno) {
+                if (retorno) {
+                    $.ajax({
+                        url: caminho,
+                        type: 'post',
+                        data: {
+                            tar_codigo: tarefa,
+                            permissao:permissaoUsiario,
+                            cli_codigo: codigoUsuario,
+                            tar_status: status,
+                            usuario: nome,
+                            acao: 'alterar'
+                        }, beforeSend: function() {
+                        }, success: function(e) {
+                            console.log(e);
+                            alertify.success("Status alterado com sucesso!");
+                            setTimeout(function(){location.reload()}, 3000);
+                            
+                        }, error: function(e) {
+                            alertify.error("Erro no sistema entre em contato com o suporte!");
+                            return false;
+                        }
+                    });
+                } else {
+                    alertify.error("Operação cancelada pelo usuário!");
+                }
+            });
+
+    })
+</script>

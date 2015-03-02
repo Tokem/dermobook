@@ -1,0 +1,28 @@
+<p>
+  <a href="<?= $this->baseUrl() ?>/usuario/"><button type="button" class="btn btn-toolbar btn-lg"><i class="icon-chevron-left"> Voltar</i></button></a>
+</p>
+<div class="widget wgreen">
+                
+                <div class="widget-head">
+                  <div class="pull-left">EXCLUIR USUÁRIO</div>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="widget-content">
+                  <div class="padd">
+
+                      <h6>Preencha os dados abaixo <img id="load" style="display: none" src="<?= $this->baseUrl() ?>/img/load.gif" alt="..."/></h6>
+                    <hr />
+                    <div id="mensagem_email">*Email já cadastrado no sistema</div>
+                     <?php echo $this->formUsuario?>      
+                  </div>
+                </div>
+                  <div class="widget-foot">
+                    <!-- Footer goes here -->
+                  </div>
+              </div>  
+              

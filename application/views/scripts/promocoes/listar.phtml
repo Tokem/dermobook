@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt_br" id="ng-app" ng-app="app">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta charset="utf-8"/>
+  <!-- Title and other stuffs -->
+  <title>Dermobook 1.0.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content=""/>
+  <meta name="keywords" content="Gerenciador promoções dermocare"/>
+  <meta name="author" content="DermoCare"/>
+
+  <!-- Stylesheets -->
+  <link href="<?= $this->baseUrl() ?>/bootstrap_promocoes/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+  
+</head>
+
+<body>
+
+<div class="bs-example">
+    <div class="well" style="max-width: 400px; margin: 0 auto 10px;">
+      <img src="<?=$this->baseUrl()?>/img/logo_promocoes.gif"/>
+      <br/>
+      <br/>
+      <a href="<?= $this->baseUrl() ?>/promocoes/"> 
+      <button type="button" class="btn btn-primary btn-lg btn-block" >
+         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        Voltar
+      </button>
+      </a>
+    </br>
+    </div>
+</div>
+
+<div class="table-responsive">
+  <div class="bs-example">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nome</th>
+          <th>Telefone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <? foreach ($this->participantes as $participante): ?>
+        <tr>
+          <td><?php echo $participante->pro_id ?></td>
+          <td><?php echo $participante->pro_nome ?></td>
+          <td><?php echo $participante->pro_telefone ?></td>
+        </tr>
+       <? endforeach; ?> 
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<script src="<?=$this->baseUrl()?>/bootstrap_promocoes/js/jquery.js"></script>
+<script src="<?=$this->baseUrl()?>/bootstrap_promocoes/js/bootstrap.min.js"></script>
+</body>
+
+</html>

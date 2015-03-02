@@ -1,0 +1,2 @@
+CREATE TRIGGER `trigger insert notificacao` AFTER INSERT ON `duca_tarefas_clientes`
+ FOR EACH ROW INSERT INTO duca_notificacao SET not_data_cadastro = NOW(), duca_clientes_cli_codigo_fk = NEW.duca_clientes_cli_codigo_usuario_fk, not_tipo=3, not_descricao= CONCAT("Uma nova TAREFA foi cadastrada para você TAREFA: #",LPAD(NEW.duca_atividades_tar_codigo_fk,6,'0'))

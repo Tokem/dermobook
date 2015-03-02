@@ -1,0 +1,252 @@
+<?php
+$auth = Zend_Auth::getInstance();
+    $identity = $auth->getIdentity();
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br" id="ng-app" ng-app="app">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta charset="utf-8"/>
+  <!-- Title and other stuffs -->
+  <title>Dermobook 1.0.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content=""/>
+  <meta name="keywords" content="Gerenciador de atividades Ducamaleão"/>
+  <meta name="author" content="Ducamaleão"/>
+
+
+  <!-- Stylesheets -->
+  <link href="<?= $this->baseUrl() ?>/style/bootstrap.css" rel="stylesheet"/>
+  <!-- Font awesome icon -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/font-awesome.css"/> 
+  <!-- jQuery UI -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/jquery-ui.css"/> 
+  <!-- Calendar -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/fullcalendar.css"/>
+  <!-- prettyPhoto -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/prettyPhoto.css"/>   
+  <!-- Star rating -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/rateit.css"/>
+  <!-- Date picker -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/bootstrap-datetimepicker.min.css"/>
+  <!-- jQuery Gritter -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/jquery.gritter.css"/>
+  <!-- CLEditor -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/jquery.cleditor.css"/> 
+  <!-- Bootstrap toggle -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/style/bootstrap-switch.css"/>
+  <!-- Main stylesheet -->
+  <link href="<?= $this->baseUrl() ?>/style/style.css" rel="stylesheet"/>
+  <!-- Widgets stylesheet -->
+  <link href="<?= $this->baseUrl() ?>/style/widgets.css" rel="stylesheet"/>
+
+
+  <!-- ALERT PLUGUIN    -->
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/js/alert/css/alertify.core.css" />
+  <link rel="stylesheet" href="<?= $this->baseUrl() ?>/js/alert/css/alertify.default.css" id="toggleCSS" />
+ 
+  <!-- Custom css -->
+  <?php echo $this->headLink(); ?>
+
+  <!-- HTML5 Support for IE -->
+  <!--[if lt IE 9]>
+  <script src="js/html5shim.js"></script>
+  <![endif]-->
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="<?= $this->baseUrl() ?>/img/favicon/favicon.png"/>
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+  
+    <div class="container">
+      <!-- Menu button for smallar screens -->
+		<div class="navbar-header">
+		  <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+			<span class="sr-only">Menu</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a href="<?=$this->baseUrl()?>/tarefa" class="navbar-brand">Visão<span class="bold"> Geral</span></a>
+		</div>
+      <!-- Site name for smallar screens -->      
+
+      <!-- Navigation starts -->
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">     
+
+
+        <!-- Links -->
+        <ul class="nav navbar-nav navbar-right">
+          <!-- Message button with number of latest messages count-->
+          <li class="dropdown dropdown-big" style='margin-right: 60px'>
+            <!-- <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+              <i class="icon-envelope-alt"></i> Inbox <span class="badge badge-info">3</span> 
+            </a> -->
+
+              <ul class="dropdown-menu">
+                <li>
+                  <!-- Heading - h5 -->
+                  <h5><i class="icon-envelope-alt"></i> Messages</h5>
+                  <!-- Use hr tag to add border -->
+                  <hr />
+                </li>
+                
+                  <li>
+                    <a href="#">dermobook</a>
+                    <hr />
+                  </li>
+                <li>
+                  <div class="drop-foot">
+                    <a href="<?=$this->baseUrl()?>/notificacao/">Ver Todas</a>
+                  </div>
+                </li>                                    
+              </ul>
+          </li>
+          <li class="dropdown">            
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+              
+            </a>
+            
+            <!-- Dropdown menu -->
+            <ul class="dropdown-menu">
+              <li><a href="<?=$this->baseUrl()?>/usuario/perfil/"><i class="icon-user"></i>Perfil</a></li>
+              <li><a href="#"><i class="icon-cogs"></i>Configurações</a></li>
+              <li><a href="<?= $this->baseUrl() ?>/login/logout"><i class="icon-off"></i>Logout</a></li>
+            </ul>
+          </li>
+          
+        </ul>       
+		  </nav>
+    </div>
+  </div>
+
+<!-- Main content starts -->
+
+<div class="content">
+
+  	<!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-dropdown"><a href="#">Menu</a></div>
+
+        <div class="sidebar-inner">
+
+
+         <?php include 'menu.phtml'; ?>
+         <?php //echo $this->navigation();?>   
+         
+          <div class="sidebar-widget">
+            <div id="todaydate"></div>
+          </div>
+
+        </div>
+    </div>
+
+    <!-- Sidebar ends -->
+
+  	<!-- Main bar -->
+  	<div class="mainbar">
+      
+	    <!-- Page heading -->
+	    <div class="page-head">
+        <!-- Page heading -->
+	        <h2 class="pull-left">DERMOBOOK V1.0.0 |&nbsp;
+			  <!-- page meta -->
+			  
+			</h2>
+      <h6 class="atualizado" style="margin-top: 1%;">Dermocare Tratamentos estéticos Avançados</h6>
+
+
+			<!-- Breadcrumb -->
+			<div class="bread-crumb pull-right">
+			  <a href="index.html"><i class="icon-home"></i> Home</a> 
+			  <!-- Divider -->
+			  <span class="divider">/</span> 
+			  <a href="#" class="bread-current">Dashboard</a>
+			</div>
+
+			<div class="clearfix"></div>
+
+	    </div>
+	    <!-- Page heading ends -->
+
+	    <!-- Matter -->
+	    <div class="matter">
+        <div class="container">
+
+          <!-- Today status. jQuery Sparkline plugin used. -->
+         
+          <?php include 'charts.phtml'; ?>
+          <?php include 'modal.phtml'; ?>
+          <?php echo $this->layout()->content; ?>
+     
+          <div class="row"></div>
+          <div class="col-md-6"></div>
+
+        </div>
+		  </div>
+
+		<!-- Matter ends -->
+    </div>
+
+   <!-- Mainbar ends -->	    	
+   <div class="clearfix"></div>
+
+</div>
+<!-- Content ends -->
+
+<!-- Notification box ends -->   
+
+<!-- Scroll to top -->
+<span class="totop"><a href="#"><i class="icon-chevron-up"></i></a></span> 
+
+<!-- Fix for old browsers -->
+
+<!-- JS -->
+<script src="<?= $this->baseUrl() ?>/js/jquery.js"></script> <!-- Bootstrap -->
+<script src="<?= $this->baseUrl() ?>/js/bootstrap.js"></script> <!-- Bootstrap -->
+<script src="<?= $this->baseUrl() ?>/js/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
+<script src="<?= $this->baseUrl() ?>/js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+<script src="<?= $this->baseUrl() ?>/js/jquery.rateit.min.js"></script> <!-- RateIt - Star rating -->
+<script src="<?= $this->baseUrl() ?>/js/jquery.prettyPhoto.js"></script> <!-- prettyPhoto -->
+
+<!-- jQuery Flot -->
+<script src="<?= $this->baseUrl() ?>/js/excanvas.min.js"></script>
+<script src="<?= $this->baseUrl() ?>/js/jquery.flot.js"></script>
+<script src="<?= $this->baseUrl() ?>/js/jquery.flot.resize.js"></script>
+<script src="<?= $this->baseUrl() ?>/js/jquery.flot.pie.js"></script>
+<script src="<?= $this->baseUrl() ?>/js/jquery.flot.stack.js"></script>
+
+<script src="<?= $this->baseUrl() ?>/js/jquery.gritter.min.js"></script> <!-- jQuery Gritter -->
+<script src="<?= $this->baseUrl() ?>/js/sparklines.js"></script> <!-- Sparklines -->
+<script src="<?= $this->baseUrl() ?>/js/jquery.cleditor.min.js"></script> <!-- CLEditor -->
+
+<script src="<?= $this->baseUrl() ?>/js/bootstrap-switch.min.js"></script> <!-- Bootstrap Toggle -->
+<script src="<?= $this->baseUrl() ?>/js/filter.js"></script> <!-- Filter for support page -->
+<script src="<?= $this->baseUrl() ?>/js/custom.js"></script> <!-- Custom codes -->
+<script src="<?= $this->baseUrl() ?>/js/charts.js"></script> <!-- Custom chart codes -->
+
+<script src="<?=$this->baseUrl()?>/js/jquery.maskedinput.js"></script>
+<script src="<?=$this->baseUrl()?>/js/jquery.pstrength-min.1.2.js"></script>
+<script src="<?=$this->baseUrl()?>/js/timepicker/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="<?=$this->baseUrl()?>/js/alert/js/alertify.min.js"></script>
+
+
+<script src="<?=$this->baseUrl()?>/js/jquery.gritter.min.js"></script>
+<script src="<?=$this->baseUrl()?>/js/jquery.peity.min.js"></script>
+<script src="<?=$this->baseUrl()?>/js/unicorn.js"></script>
+<script src="<?=$this->baseUrl()?>/js/unicorn.interface.js"></script>
+<script src="<?=$this->baseUrl()?>/js/jLoader.js"></script>
+<script src="<?=$this->baseUrl()?>/js/maskmoney.min.js"></script>
+<script src="<?=$this->baseUrl()?>/js/jquery-system.js"></script>
+
+
+
+
+<!--Data Table-->
+<?php echo $this->headScript();?>
+</body>
+</html>

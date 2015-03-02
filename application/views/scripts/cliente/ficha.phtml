@@ -1,0 +1,235 @@
+<div class="bviolet">
+  <h3 id="titulo_paciente" style="padding: 11px">Paciente: <?php echo $this->pacienteNome?></h3>
+</div>
+
+
+<?php
+  
+?>
+
+<?php $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger'); ?>
+<?php foreach ($flashMessenger->getMessages() as $msg): ?>
+    <?php echo $msg ?>
+<?php endforeach; ?>
+<br/>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#01" role="tab" data-toggle="tab">IDENTIFICAÇÃO</a></li>
+  <li role="presentation" ><a href="#01-1" role="tab" data-toggle="tab">ENDEREÇO</a></li>
+  <li role="presentation"><a href="#02" role="tab" data-toggle="tab">ANAMNESE</a></li>
+  <li role="presentation"><a href="#03" role="tab" data-toggle="tab">ANTECEDENTES </a></li>
+  <li role="presentation"><a href="#04" role="tab" data-toggle="tab">HABITOS</a></li>
+  <li role="presentation"><a href="#05" role="tab" data-toggle="tab">PERIMETRIA</a></li>
+  <li role="presentation"><a href="#06" role="tab" data-toggle="tab">INSPEÇÃO E PALPACÃO</a></li>
+  <li role="presentation"><a href="#07" role="tab" data-toggle="tab">SENSIBILIDADE</a></li>
+  <li role="presentation"><a href="#08" role="tab" data-toggle="tab">ADD TRATAMENTOS</a></li>
+  <li role="presentation"><a href="#09" role="tab" data-toggle="tab">TRATAMENTOS</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="01">
+  	<!-- div 01 -->
+    <div class="form_system">
+    <?= $this->formCliente ?>
+    </div>
+  	<!-- fim div 01 -->
+  </div>
+
+  <div role="tabpanel" class="tab-pane active" id="01-1">
+    <!-- div 01-1 -->
+    <div class="form_system">
+      <?= $this->formEndereco ?>
+    </div>
+    <!-- fim div 01-1 -->
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="02">
+  	<!-- div 02 -->
+    <div class="form_system">
+    <?= $this->formAnamnese ?>
+    </div>
+  	<!-- fim div 02 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="03">
+  	<!-- div 03 -->
+    <div class="form_system">
+    <?= $this->formAntecedentes ?>
+    </div>
+  	<!-- fim div 03 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="04">
+  	<!-- div 04 -->
+    <div class="form_system">
+    <?= $this->formHabitos ?>
+    </div>
+  	<!-- fim div 04 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="05">
+  	<!-- div 05 -->
+    <div class="form_system">
+    <?= $this->formPerimetria ?>
+    </div>
+  	<!-- fim div 05 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="06">
+	<!-- div 06 -->
+    <div class="form_system">
+    <?= $this->formInspecao ?>
+    </div>
+  	<!-- fim div 06 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="07">
+  	<!-- div 07 -->
+    <div class="form_system">
+    <?= $this->formSensibilidade ?>
+    </div>
+  	<!-- fim div 07 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="08">
+    <!-- div 08 -->
+    <div class="form_system">
+    <?= $this->formTratamento ?>
+    </div>
+    <!-- fim div 08 -->
+  </div>
+  <div role="tabpanel" class="tab-pane" id="09">
+
+<div class="widget wviolet">
+
+    <div class="widget-head">
+        <div class="pull-left">LISTAGEM DE TRATAMENTOSS</div>
+        <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="widget-content">
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped" id='list-usuarios'>
+                <colgroup>
+                    <col class="col-lg-1">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                </colgroup>
+                <thead>
+                    <tr class="warning">
+                        <th>Nome</th>
+                        <th>Data Ava.</th>
+                        <th>Objetivo</th>
+                        <th>Valor</th>
+                        <th>Sess</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <? foreach ($this->tratamentos as $tratamento): ?>
+                        
+                        <tr link="<?= $this->baseUrl() ?>/usuario/editar/id/<?= $usuario->cli_codigo ?>" class="td-list">
+                            <td><?php echo $tratamento["tra_nome"]?></td>
+                            <td><?php echo $this->dateFormate($tratamento["tra_data_avaliacao"])?></td>
+                            <td><?php echo $tratamento["tra_objetivo"]?></td>
+                            <td><?php echo $tratamento["tra_valor"]?></td>
+                            <td><?php echo $tratamento["tra_qtd_ini"]?></td>
+                            <td sytle="text-align:center">
+                                <div class="btn-group">
+                                    <a href="<?= $this->baseUrl() ?>/frequencia/index/id/<?= $tratamento['tra_id'] ?>"><button class="btn btn-sm btn-info"><i class="icon-file"></i></button></a>
+                                    <a href="<?= $this->baseUrl() ?>/tratamento/editar/id/<?= $this->pacienteCodigo ?>"><button class="btn btn-sm btn-success"><i class="icon-pencil"></i></button></a>
+                                    <a href="jajascript:void(0);" class="ver_tratamento" id="<?= $tratamento['tra_id']?>" ><button class="btn btn-sm btn-primary"><i class="icon-zoom-in"></i></button></a>
+                                    <a href="<?= $this->baseUrl() ?>/tratamento/excluir/id/<?= $this->pacienteCodigo ?>"><button class="btn btn-sm btn-danger"><i class="icon-remove"></i></button></a>
+                                </div>
+
+                            </td>
+                        </tr>
+                        
+                    <? endforeach; ?>  
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-foot">
+
+            <?php echo $this->paginator; ?>
+
+            <div class="clearfix"></div> 
+
+        </div>
+    </div>
+    <!-- div 09 -->
+  <br/>  
+  
+    <!-- fim div 09 -->
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_tratamento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+        <form enctype="application/x-www-form-urlencoded" action="/dermobook/public/tratamento/adicionar" method="post"><dl class="zend_form">
+          <dt id="tra_nome-label"><label for="tra_nome" class="required">Nome do Tratamento:</label></dt>
+          <dd id="tra_nome-element">
+            <input type="text" name="tra_nome" id="tra_nome" value="" class="form-control"></dd>
+            <dt id="tra_data_avaliacao-label"><label for="tra_data_avaliacao" class="required">Data avaliação:</label></dt>
+            <dd id="tra_data_avaliacao-element">
+              <input type="text" name="tra_data_avaliacao" id="tra_data_avaliacao" value="" class="form-control hasDatepicker"></dd>
+              <dt id="tra_objetivo-label"><label for="tra_objetivo" class="required">Objetivo:</label></dt>
+              <dd id="tra_objetivo-element">
+                <input type="text" name="tra_objetivo" id="tra_objetivo" value="" class="form-control"></dd>
+                <dt id="tra_valor-label"><label for="tra_valor" class="required">Valor:</label></dt>
+                <dd id="tra_valor-element">
+                  <input type="text" name="tra_valor" id="tra_valor" value="" class="form-control"></dd>
+                  <dt id="tra_forma_pagamento-label"><label for="tra_forma_pagamento" class="required">Forma de pagamento:</label></dt>
+                  <dd id="tra_forma_pagamento-element">
+                    <input type="text" name="tra_forma_pagamento" id="tra_forma_pagamento" value="" class="form-control"></dd>
+                    <dt id="tra_qtd_ini-label"><label for="tra_qtd_ini" class="required">Quantidade de sessões:</label></dt>
+                    <dd id="tra_qtd_ini-element">
+                      <select id="quantidade" class="form-control">
+                        <option >selecione a quantidade</option>
+                        <option value='1' >1</option>
+                        <option value='2' >2</option>
+                        <option value='3' >3</option>
+                        <option value='4' >4</option>
+                        <option value='5' >5</option>
+                        <option value='6' >6</option>
+                        <option value='7' >7</option>
+                        <option value='8' >8</option>
+                        <option value='9' >9</option>
+                        <option value='10' >10</option>
+                        <option value='11' >11</option>
+                        <option value='12' >12</option>
+                        <option value='13' >13</option>
+                        <option value='14' >14</option>
+                        <option value='15' >15</option>
+                      </select>
+                    </dd>
+                      <dt id="tra_consideracoes-label"><label for="tra_consideracoes" class="optional">Considerações:</label></dt>
+                      <dd id="tra_consideracoes-element">
+                        <textarea name="tra_consideracoes" id="tra_consideracoes" cols="180" rows="4" class="form-control cleditor" style="display: none; width: 578px;"></textarea>
+                      </dd>
+                        <dt id="id-label">&nbsp;</dt>
+                        <dd id="id-element">
+                          <input type="hidden" name="id" value="4" id="id"></dd>
+                          <dt id="btnenviar-label">&nbsp;</dt><dd id="btnenviar-element">
+                          <button name="btnenviar" id="btnenviar" type="submit" class="btn btn-primary btn-lg" data-complete-text="Enviar Dados">Enviar Dados</button></dd></dl></form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>

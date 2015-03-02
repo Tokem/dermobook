@@ -1,0 +1,93 @@
+ <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title" style="color:#a94442">Filtrar tarefas</h3>
+        </div>
+        <div class="panel-body">
+
+         <form class="form-inline" role="form" action="<?= $this->baseUrl() ?>/tarefa/resultado/" method="post">
+              
+            <div class="form-group">
+              <label class="sr-only" for="data_inicio">Data Inicio</label>
+              <input type="text" style="max-width: 94px;" class="form-control" value="<?php echo @$_POST['data_inicio'] ?>" id="data_inicio" name="data_inicio" placeholder="Data Início" >
+            </div>  
+            &nbsp;
+            &nbsp;
+
+            <div class="form-group">
+              <label class="sr-only" for="data_fim">Data Fim</label>
+              <input type="text" style="max-width: 94px;" class="form-control" value="<?php echo @$_POST['data_fim'] ?>"  id="data_fim" name="data_fim" placeholder="Data Fim">
+            </div>  
+            &nbsp;
+            &nbsp;
+            <div class="form-group">
+                <select id="andamento" class="form-control" style="max-width: 410px;" name="andamento">
+                    <option value='' <?= $this->andamento =='' ? 'selected="selected"' : '' ?> >Andamento</option>
+                        <option value="0" <?= @$_POST['andamento'] == '0' ? 'selected="selected"' : '' ?> >Não Iniciado</option>
+                        <option value="1" <?= @$_POST['andamento'] == '1' ? 'selected="selected"' : '' ?> >Iniciado</option>
+                        <option value="2" <?= @$_POST['andamento'] == '2' ? 'selected="selected"' : '' ?> >Concluído</option>
+                        <option value="3" <?= @$_POST['andamento'] == '3' ? 'selected="selected"' : '' ?> >Parado</option>
+                        <option value="4" <?= @$_POST['andamento'] == '4' ? 'selected="selected"' : '' ?> >Refazendo</option>
+                        <option value="5" <?= @$_POST['andamento'] == '5' ? 'selected="selected"' : '' ?> >Aprovação</option>
+                </select>
+            </div>
+            &nbsp;
+            &nbsp;
+            <div class="form-group">
+                <select id="status" class="form-control" style="max-width: 410px;" name="status">
+                    <option  value='' <?= $this->status == '' ? 'selected="selected"' : '' ?>>Status</option>
+                        <option value="0" <?= @$_POST['status'] == '0' ? 'selected="selected"' : '' ?>>A fazer</option>
+                        <option value="1" <?= @$_POST['status'] == '1' ? 'selected="selected"' : '' ?>>Andamento</option>
+                        <option value="2" <?= @$_POST['status'] == '2' ? 'selected="selected"' : '' ?>>Atrasado</option>
+                        <option value="3" <?= @$_POST['status'] == '3' ? 'selected="selected"' : '' ?>>Concluído</option>
+                        <option value="4" <?= @$_POST['status'] == '4' ? 'selected="selected"' : '' ?>>Finalizados</option>
+                </select>
+            </div>
+            &nbsp;
+            &nbsp;
+            <div class="form-group">
+                <select class="form-control" style="max-width: 410px;" name="prioridade">
+                    <option value='' <?= @$_POST['prioridade'] == '' ? 'selected="selected"' : '' ?>>Prioridade</option>
+                        <option value="baixa" <?= @$_POST['prioridade'] == 'baixa' ? 'selected="selected"' : '' ?>>Baixa</option>
+                        <option value="normal" <?= @$_POST['prioridade'] == 'normal' ? 'selected="selected"' : '' ?>>Normal</option>
+                        <option value="alta" <?= @$_POST['prioridade'] == 'alta' ? 'selected="selected"' : '' ?>>Alta</option>
+                </select>
+            </div>
+            &nbsp;
+            &nbsp;
+            <?php if (!($identity->cli_permissao == "operador" || $identity->cli_tipo == 2)): ?>
+            <div class="form-group">
+                <select class="form-control" style="max-width: 410px;" name="operador">
+                    <option value=''>Usuário</option>
+                    <?php foreach ($this->opers as $operador): 
+                        if($this->oper == $operador->cli_codigo) 
+                            $selected = "selected='selected'";
+                        else
+                            $selected = '';
+                    ?>
+                        <option value="<?= $operador->cli_codigo ?>" <?= $selected ?>  ><?= $operador->cli_nome ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            &nbsp;
+            &nbsp;
+            <?php endif; ?>
+
+            <div class="form-group">
+                <select class="form-control" style="max-width: 410px;" name="cliente">
+                    <option value=''>Cliente</option>
+                    <?php foreach ($this->clis as $cliente): 
+                        if($this->clidados == $cliente->cli_codigo) 
+                            $selected = "selected='selected'";
+                        else
+                            $selected = '';
+                    ?>
+                        <option value="<?= $cliente->cli_codigo ?>" <?= $selected ?> ><?= $cliente->cli_nome ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Filtrar</button>
+        </form>
+
+        </div>
+      </div>

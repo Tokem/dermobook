@@ -1,0 +1,97 @@
+<?php $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger'); ?>
+<?php foreach ($flashMessenger->getMessages() as $msg): ?>
+    <?php echo $msg ?>
+<?php endforeach; ?>
+<p>
+  <a href="<?= $this->baseUrl() ?>/cliente/cadastrar/"><button type="button" class="btn btn-primary btn-lg"><i class="icon-file"> Salvar Ficha</i></button></a>
+  <a href="#"><button type="button" class="btn btn-info btn-lg"><i class="icon-plus"> Adicionar Linha</i></button></a>
+  <a href="#"><button type="button" class="btn btn-danger btn-lg"><i class="icon-minus"> Remover Linha  </i></button></a>
+</p>
+
+<div class="widget wviolet">
+
+    <div class="widget-head">
+        <div class="pull-left">Ficha de Tratamento</div>
+        <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="widget-content">
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped" id='list-clientes'>
+                <colgroup>
+                    <col class="col-lg-1">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                </colgroup>
+                <thead>
+                    <tr class="warning">
+                        <th>Sessão</th>
+                        <th>Data</th>
+                        <th>Tratamento</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    
+                        <tr>
+                            <td>
+                                <select class="form-control">
+                                      <option>1</option>
+                                      <option>2</option>
+                                      <option>3</option>
+                                      <option>4</option>
+                                      <option>5</option>
+                                      <option>6</option>
+                                      <option>7</option>
+                                      <option>8</option>
+                                      <option>9</option>
+                                      <option>10</option>
+                                      <option>11</option>
+                                      <option>12</option>
+                                      <option>13</option>
+                                      <option>14</option>
+                                      <option>15</option>
+                                      <option>16</option>
+                                      <option>17</option>
+                                      <option>18</option>
+                                      <option>19</option>
+                                      <option>20</option>
+                                </select>
+                            </td>
+                            <td><input type="text" name="data[]" value=""></td>
+                            <td><input type="text" name="tratamento[]" class="input_g" value=""></td>
+                            <td sytle="text-align:center">
+                                <select class="form-control">
+                                      <option>Presente</option>
+                                      <option>Faltou</option>
+                                      <option>Paciente Remarcou</option>
+                                      <option>Dr. Remarcou</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-foot">
+
+            <div class="clearfix"></div> 
+
+        </div>
+    </div>
+
+<p>
+  <a href="<?= $this->baseUrl() ?>/cliente/cadastrar/"><button type="button" class="btn btn-primary btn-lg"><i class="icon-file"> Salvar Ficha</i></button></a>
+  <a href="#"><button type="button" class="btn btn-info btn-lg"><i class="icon-plus"> Adicionar Linha</i></button></a>
+  <a href="#"><button type="button" class="btn btn-danger btn-lg"><i class="icon-minus"> Remover Linha  </i></button></a>
+</p> 

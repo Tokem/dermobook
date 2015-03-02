@@ -1,0 +1,605 @@
+<script type="text/javascript">
+
+    //Editar Hora
+        $(function(){
+
+            $(document).on('click', '.editar-hora', function(e) {
+
+                var _currentItem;
+                var _value;
+
+                    
+                _currentItem = $(this);
+                _value = _currentItem.parent().children("label").text();
+                _currentItem.parent().children("label").css( "display", "none" );
+                _currentItem.parent().children(".editar-hora-span").show();
+                _currentItem.parent().children().children(".editar-hora-input").val(_value).focus();
+
+
+            });
+
+
+            $(document).on('click', '.btn-save-time', function(e) {
+
+                var _currentItem;
+                var _value;
+
+                _currentItem = $(this);
+                _value = _currentItem.parent().children(".editar-hora-input").val();
+                _id = _currentItem.parent().children(".editar-hora-input").attr('id');
+                _currentItem.parent().children(".editar-hora-span").hide();
+                _currentItem.parent().parent().children(".editar-hora-span").hide();
+
+
+
+                $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'editarhora', 'controller' => 'tarefa')); ?>",
+                data: {
+                    tar_codigo: _id,
+                    tar_hora: _value,
+                },
+                    success: function(response) {
+                        if(response==1){
+                            _currentItem.parent().parent().children("label").text(_value);
+                            _currentItem.parent().parent().children("label").show();
+                        }else{
+                            _currentItem.parent().parent().children("label").show();
+                        }
+                    }
+                });
+                e.preventDefault();
+
+                
+            });
+
+            $(document).on('click', '.btn-close-time', function(e) {
+
+                var _currentItem;
+                var _value;
+
+                _currentItem = $(this);
+                _currentItem.parent().children(".editar-hora-span").hide();
+                _currentItem.parent().parent().children(".editar-hora-span").hide();
+                _currentItem.parent().parent().children("label").show();
+
+                
+            });
+        })
+    // Fim editar Hora    
+
+
+    $(function() {
+
+        var tarefa;
+        var id;
+        var _additem;
+
+        $(".showmodal").bind('click', function(e) {
+           // tarefa = $(this).attr('href');
+            id = $(this).attr('href');
+            $('#modalCheck').modal('show');
+           // $("#titulo_tarefa").html(tarefa.eq(2).text());
+
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'index', 'controller' => 'checklist')); ?>",
+                data: "id=" + id,
+                success: function(response) {
+                    $("#content-left").html(response);
+                }
+            });
+            e.preventDefault();
+        });
+
+        var _currentItem;
+        $(document).on('click', '.edit>label', function(e) {
+            _currentItem = $(this);
+            _currentItem.parent().children("label").text('');
+            _currentItem.parent().children(".js-checkitem-input").show();
+            _currentItem.parent().children(".edit-controls").show();
+        });
+
+        $(document).on('click', '.edit-controls>.js-save-edit', function(e) {
+            _currentItem.parent().children(".js-checkitem-input").hide();
+            _currentItem.parent().children(".edit-controls").hide();
+            _currentItem.text(_currentItem.parent().children('.js-checkitem-input').val());
+
+            var data = "tipo=update";
+            data += "&item=" + _currentItem.attr('for');
+            data += "&texto=" + _currentItem.parent().children('.js-checkitem-input').val();
+
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'updatedescricao', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function(responseText) {
+                    listHistorico();
+                }
+            });
+            _currentItem = null;
+            return false;
+        });
+
+        $(document).on('click', '.edit-controls>.js-delete-item', function(e) {
+            _currentItem.parent().children(".js-checkitem-input").hide();
+            _currentItem.parent().children(".edit-controls").hide();
+            _currentItem.text(_currentItem.parent().children('.js-checkitem-input').val());
+
+            var data = "tipo=remove";
+            data += "&item=" + _currentItem.attr('for');
+
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'updatedescricao', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function() {
+                    listHistorico();
+                }
+            });
+            _currentItem.parent().remove();
+            _currentItem = null;
+            return false;
+        });
+
+        $(document).on('click', "form input:checkbox", function(e) {
+            var _this = $(this);
+            var data = "item=" + _this.attr('name');
+            data += "&status=" + _this.is(':checked');
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'itemchecked', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function(responseText) {
+                    listHistorico();
+                }
+            });
+        });
+
+        $(document).on('click', ".additem", function(e) {
+            _additem = $(this);
+            $('#box-checklist-descricao').show();
+            $('#chd_descricao').focus();
+        });
+
+        var _title;
+        $(document).on('click', '.title', function(e) {
+            if (_title != null) {
+                _title.show();
+                $("#btn-remove").remove();
+                $("#btn-save").remove();
+                $('#' + _title.attr('for')).hide();
+            }
+
+            _title = $(this);
+            $(this).hide();
+            $('#' + _title.attr('for')).show();
+            $('#' + _title.attr('for')).after("<a class='btn btn-sm btn-success' id='btn-save'><i class='icon-pencil'></i></a><a class='btn btn-sm btn-danger' id='btn-remove'><i class='icon-remove'></i></a>");
+
+            $(document).on("click", '#btn-save, #btn-remove', function(e) {
+                var elemento = $(this);
+                var tipo;
+                if ($(this).attr('id') == 'btn-save') {
+                    tipo = 'update';
+                }
+
+                if ($(this).attr('id') == 'btn-remove') {
+                    tipo = 'remove';
+                }
+
+                var data = "tipo=" + tipo + "&elemento=" + _title.attr('for') + '&texto=' + $("#" + _title.attr('for')).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?= $this->url(array('action' => 'updateItem', 'controller' => 'checklist')); ?>",
+                    data: data,
+                    success: function(responseText) {
+                        if (tipo == "remove") {
+                            elemento.before().remove();
+                            elemento.after().remove();
+                            elemento.remove();
+                        }
+                        _title.text($('#' + _title.attr('for')).val());
+                        _title.show();
+                        $("#btn-remove").remove();
+                        $("#btn-save").remove();
+
+                        $('#' + _title.attr('for')).hide();
+                        listHistorico();
+                    }
+                });
+
+            });
+        });
+
+        $(document).on("blur", '.title', function() {
+            _title.text($('#' + _title.attr('for')).val());
+            _title.show();
+            $('#' + _title.attr('for')).hide();
+        });
+
+
+        $("#box-arquivo").on('click', function(e) {
+            $('#modal-box-arquivo').modal('show');
+
+            $('#tar_codigo_imagem').val(id);
+        }); 
+
+        $("#inner-box-arquivo").on('click', function(e) {
+            $('#modal-box-imagem').modal('show');
+        });   
+
+        $(".fechar-box-arquivo").on('click', function(e) {
+            $('#modal-box-arquivo').modal('hide');
+        });
+
+        $(".fechar-box-arquivo-imagem").on('click', function(e) {
+            $('#modal-box-imagem').modal('hide');
+        });        
+
+        $("#box-checklist").on('click', function(e) {
+            showBoxCheckList();
+        });        
+
+        $(".fechar-box-checklist").on('click', function(e) {
+            $(this).parent().hide();
+        });
+
+        $('.tar_imagem_remove').on('click', function(e){
+            var ths = $(this);
+            var data = "remove_imagem="+ $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'upload', 'controller' => 'tarefa')); ?>",
+                data: data,
+                success: function(responseText) {
+                  var obj = jQuery.parseJSON( responseText );
+                  if(obj.sucesso){
+                    ths.parent().parent().remove();
+                  }
+                }
+            });
+            e.preventDefault();
+        });
+
+        function showBoxCheckList() {
+            var box = $('.box-checklist');
+            var display = box[0].style.display;
+
+            if (display == '' || display == 'none') {
+                $(".box-checklist").show();
+            } else {
+                $(".box-checklist").hide();
+            }
+        }
+
+        $("form#form-checklist").submit(function(e) {
+            var data = $(this).serialize();
+            data += "&tar_codigo_fk=" + id;
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'cadastrar', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function(responseText) {
+                    $("#form-list").append(responseText);
+                    $("#che_titulo").val('');
+                    showBoxCheckList();
+                    listHistorico();
+                }
+            });
+            e.preventDefault();
+        });
+
+        $("form#form-checklist-descricao").submit(function(e) {
+            var data = $(this).serialize();
+            data += "&checklist_che_codigo_fk=" + _additem.attr('id');
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'cadastrardescricao', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function(responseText) {
+                    $("#chd_descricao").val('');
+                    _additem.before(responseText);
+                    listHistorico();
+                }
+            });
+            e.preventDefault();
+        });
+
+
+        function listHistorico() {
+            var data = "his_codigo=" + id;
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'listhistorico', 'controller' => 'checklist')); ?>",
+                data: data,
+                success: function(responseText) {
+                    //$("#listHistorico").html(responseText);
+                }
+            });
+        }
+        
+        $('.btn-remover').bind('click', function(e){
+            id = $(this).attr('href');
+            $("#modal-exclusao").modal('show');
+            e.preventDefault();
+        });
+        
+        $('#btn-send-excluir').bind('click', function(e){
+            var data = "id=" + id;
+            $.ajax({
+                type: "POST",
+                url: "<?= $this->url(array('action' => 'excluir', 'controller' => 'tarefa')); ?>",
+                data: data,
+                success: function(responseText) {
+                    console.log(responseText);
+                    if(responseText == null || responseText == ''){
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+        
+    });
+
+</script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+            /*MARCA A TAREFA COMO FINALIZADA*/
+            $("#tar-status-button").on('switch-change', function (e, data) {
+
+                var caminho = "<?php echo $this->url(array('action' => 'status', 'controller' => 'tarefa')); ?>";
+                var id = $("#value-tar-status").val();
+                var nomeUsuario = "<?php echo $identity->cli_nome ?>";
+
+                if( $("#modal-lista-status").css('display')=="block") {
+
+                    alertify.confirm("Deseja alterar o status desta tarefa?", function (retorno) {
+                        if (retorno) {
+                            $.ajax({
+                                url: caminho,
+                                type: 'post',
+                                data: {
+                                    tar_finalizar: data.value,
+                                    tar_codigo:id,
+                                    usuario:nomeUsuario,
+                                    acao: 'finalizar'
+                                }, beforeSend: function() {
+                                }, success: function(e) {
+                                    $("#modal-lista-status").modal('hide');
+                                    alertify.success("Status alterado com sucesso!");
+                                    setTimeout(function(){location.reload()}, 3000);
+                                    return false;
+                                     
+                                }, error: function(e) {
+                                    console.log(e);
+                                    return false
+                                }
+                            })
+                        } else {
+                            $("#modal-lista-status").modal('hide');
+                            alertify.error("Operação cancelada pelo usuário");
+                            $("#modal-lista-status").modal("hide");
+                        }
+                    });
+                     
+                }
+            });          
+
+        //Exibir modal com a lista de status para aquela atividade
+        $('a').on('click', function() {
+            var ref = $(this).attr('atividade');
+            var caminho = "<?php echo $this->url(array('action' => 'list-status', 'controller' => 'tarefa')); ?>";
+            if (ref) { 
+
+                $.ajax({
+                    url: caminho,
+                    type: 'post',
+                    data: {
+                        tar_codigo: ref,
+                        acao: 'status-tarefa'
+                    }, beforeSend: function() {
+                    }, success: function(e) {
+
+                        var result  = parseInt(e);
+
+                         switch(result)
+                         {
+                            case 0:
+                                 $("#tar-status-button").bootstrapSwitch('setState', false);
+                              break;
+                            case 1:
+                                 $("#tar-status-button").bootstrapSwitch('setState', true);
+                              break;
+                         }  
+                    }, error: function(e) {
+                        console.log(e);
+                        return false
+                    }
+                })
+
+
+                 $.ajax({
+                    url: caminho,
+                    type: 'post',
+                    data: {
+                        tar_codigo: ref,
+                        acao: 'listStatus'
+                    }, beforeSend: function() {
+                    }, success: function(e) {
+                        var list = jQuery.parseJSON(e);
+                        var interation = list.length;
+                        $("#content-geral-list-tarefas").html("");
+                        $("#value-tar-status").val(ref);
+                        var currentIdInt=0;
+                        $.each(list, function(i, item) {
+                            //console.log(item.cli_nome);
+                            //console.log(item.duca_tar_cli_status);
+                            currentIdInt++;
+                            var checked = item.duca_tar_cli_status;
+                            var status = new Array();
+                            status[checked]="checked='checked'";
+                            
+                            
+                            $("#content-geral-list-tarefas").append(
+                            "<fieldset><form><div class='table-status"+currentIdInt+"'>"+
+                                "<div class='nome'><b class='nome_negrito'>"+item.cli_nome+"</b></div>"+
+                                "<ul class='list-status' style='list-style: none;display: -webkit-inline-box;'>"+
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio' disabled='disabled' name='optionsRadios"+currentIdInt+" ' "+status[0]+"  value='0'>"+
+                                                "<span class='label label-danger'>Não iniciado</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio' disabled='disabled' name='optionsRadios"+currentIdInt+"' "+status[1]+" value='1' >"+
+                                                "<span class='label label-info'>Iniciado</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+   
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio' disabled='disabled' name='optionsRadios"+currentIdInt+"' "+status[2]+" value='2' >"+
+                                                "<span class='label label-success'>Concluído</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio'disabled='disabled' name='optionsRadios"+currentIdInt+"' "+status[3]+"  value='3'>"+
+                                                "<span class='label label-default' >Parado</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio' disabled='disabled' name='optionsRadios"+currentIdInt+"' "+status[4]+" value='4'>"+
+                                                "<span class='label label-warning' >Refazendo</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+
+                                    
+                                    "<li>"+
+                                        "<div class='radio'>"+
+                                            "<label>"+
+                                                "<input type='radio' disabled='disabled' name='optionsRadios"+currentIdInt+"' "+status[5]+" value='5'>"+
+                                                "<span class='label label-primary' >Aprovação</span>"+
+                                            "</label>"+
+                                        "</div>"+
+                                    "</li>"+   
+                                    
+                                    
+                                "</ul>"+
+                              "</div><form/></fieldset>");
+                        });
+                        $("#modal-lista-status").modal('show');
+                        return false;
+                    }, error: function(e) {
+                        console.log(e);
+                        return false
+                    }
+                })
+                
+                
+            }
+
+        });
+
+
+        //Verifica o status da tarefa por usuario
+        //
+        //Exibir modal com a lista de status para aquela atividade
+        $('a').on('click', function() {
+            var ref = $(this).attr('status-atividade');
+            var caminho = "<?php echo $this->url(array('action' => 'status', 'controller' => 'tarefa')); ?>";
+            var codigoUsuario = <?php echo $identity->cli_codigo ?>;
+            if (ref) {
+
+                $.ajax({
+                    url: caminho,
+                    type: 'post',
+                    data: {
+                        tar_codigo: ref,
+                        cli_codigo: codigoUsuario,
+                        acao: 'verificar'
+                    }, beforeSend: function() {
+                    }, success: function(e) {
+
+                        $("#modal-status").modal('show');
+
+                        if (e == 0) {
+                            $("#optionsRadios0").prop("checked", true)
+                        }
+                        if (e == 1) {
+                            $("#optionsRadios1").prop("checked", true)
+                        }
+                        if (e == 2) {
+                            $("#optionsRadios2").prop("checked", true)
+                        }
+                        if (e == 3) {
+                            $("#optionsRadios3").prop("checked", true)
+                        }
+                        if (e == 4) {
+                            $("#optionsRadios4").prop("checked", true)
+                        }
+                        if (e == 5) {
+                            $("#optionsRadios5").prop("checked", true)
+                        }
+
+                    }, error: function(e) {
+                        console.log(e);
+                        return false
+                    }
+                })
+
+                $("#id-tarefa").val(ref);
+            }
+
+        });
+
+        $("input[type='radio'][name='optionsRadios']").on('click', function() {
+            var status = $(this).val();
+            var caminho = "<?php echo $this->url(array('action' => 'status', 'controller' => 'tarefa')); ?>";
+            var codigoUsuario = <?php echo $identity->cli_codigo ?>;
+            var tarefa = $("#id-tarefa").val();
+            var nome = "<?php echo $identity->cli_nome ?>";
+
+            alertify.confirm("Deseja alterar o status desta tarefa?", function (retorno) {
+                if (retorno) {
+                    $.ajax({
+                        url: caminho,
+                        type: 'post',
+                        data: {
+                            tar_codigo: tarefa,
+                            cli_codigo: codigoUsuario,
+                            tar_status: status,
+                            usuario: nome,
+                            acao: 'alterar'
+                        }, beforeSend: function() {
+                        }, success: function(e) {
+                            $("#modal-status").modal('hide');
+                            alertify.success("Status alterado com sucesso!");
+                            setTimeout(function(){location.reload()}, 3000);
+                            
+                        }, error: function(e) {
+                            alertify.error("Erro no sistema entre em contato com o suporte!");
+                            return false;
+                        }
+                    });
+                } else {
+                    alertify.error("Operação cancelada pelo usuário!");
+                }
+            });
+            
+
+        });
+
+    });
+</script>

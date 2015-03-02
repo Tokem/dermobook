@@ -1,0 +1,88 @@
+<?php $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger'); ?>
+<?php foreach ($flashMessenger->getMessages() as $msg): ?>
+    <?php echo $msg ?>
+<?php endforeach; ?>
+<p>
+  <a href="<?= $this->baseUrl() ?>/tratamento/nome/"><button type="button" class="btn btn-primary btn-lg"><i class="icon-user"> Cadastrar tratamento</i></button></a>
+</p>
+<div class="widget wred">
+
+    <div class="widget-head">
+        <div class="pull-left">LISTAGEM DE TRATAMENTOS</div>
+        <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="widget-content">
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped" id='list-tratamentos'>
+                <colgroup>
+                    <col class="col-lg-1">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                </colgroup>
+                <thead>
+                    <tr class="warning">
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <? foreach ($this->paginator as $tratamento): ?>
+                        <tr>
+                            <td><?= $tratamento->tra_id ?></td>
+                            <td><?= $tratamento->tra_nome ?></td>
+                            <td sytle="text-align:center">
+                                <div class="btn-group">
+                                    <a href="<?= $this->baseUrl() ?>/tratamento/editar/id/<?= $tratamento->tra_id ?>"><button class="btn btn-sm btn-success"><i class="icon-pencil"></i></button></a>
+                                    <a href="<?= $this->baseUrl() ?>/tratamento/excluir/id/<?= $tratamento->tra_id ?>"><button class="btn btn-sm btn-danger"><i class="icon-remove"></i></button></a>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    <? endforeach; ?>  
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-foot">
+
+            <?php echo $this->paginator; ?>
+
+            <div class="clearfix"></div> 
+
+        </div>
+    </div>
+
+<script>
+    $(function(){
+        $('#list-tratamentos').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            // "sDom": 'T<"clear">lfrtip',
+            // "oTableTools": {
+            //   "sSwfPath": "../media/swf/copy_csv_xls_pdf.swf"
+            // },
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],
+            "aaSorting" : [[0, 'desc']],
+            "bStateSave": true,    
+            
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+    });
+</script>

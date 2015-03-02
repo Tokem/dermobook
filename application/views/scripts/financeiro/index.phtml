@@ -1,0 +1,155 @@
+<?php $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger'); ?>
+<?php foreach ($flashMessenger->getMessages() as $msg): ?>
+    <?php echo $msg ?>
+<?php endforeach; ?>
+<p>
+  <a href="<?= $this->baseUrl() ?>/financeiro/cadastrar/"><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal_financeiro_receita"><i class="icon-plus">  Nova vomimentação</i></button></a>
+</p>
+<div class="widget wblue">
+
+    <div class="widget-head">
+        <div class="pull-left">ÚLTIMOS LANÇAMENTOS</div>
+        <div class="widget-icons pull-right">
+            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+            <a href="#" class="wclose"><i class="icon-remove"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="widget-content">
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped" id='list-usuarios'>
+                <colgroup>
+                    <col class="col-lg-1">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                    <col class="col-lg-2">
+                </colgroup>
+                <thead>
+                    <tr class="warning">
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Permissão</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <? foreach ($this->paginator as $usuario): ?>
+                        
+                        <tr link="<?= $this->baseUrl() ?>/usuario/editar/id/<?= $usuario->cli_codigo ?>" class="td-list">
+                            <td><?= $usuario->cli_codigo ?></td>
+                            <td><?= $usuario->cli_nome ?></td>
+                            <td><?= $usuario->cli_email ?></td>
+                            <td><?= $usuario->cli_telefone ?></td>
+                            <td><?= $usuario->cli_permissao ?></td>
+                            <td sytle="text-align:center">
+                                <div class="btn-group">
+                                    <a href="<?= $this->baseUrl() ?>/usuario/perfil/id/<?= $usuario->cli_codigo ?>"><button class="btn btn-sm btn-info"><i class="icon-user"></i></button></a>
+
+                                    <a href="<?= $this->baseUrl() ?>/usuario/editar/id/<?= $usuario->cli_codigo ?>"><button class="btn btn-sm btn-success"><i class="icon-pencil"></i></button></a>
+                                    <a href="<?= $this->baseUrl() ?>/usuario/visualizar/id/<?= $usuario->cli_codigo ?>"><button class="btn btn-sm btn-primary"><i class="icon-zoom-in"></i></button></a>
+                                    <a href="<?= $this->baseUrl() ?>/usuario/excluir/id/<?= $usuario->cli_codigo ?>"><button class="btn btn-sm btn-danger"><i class="icon-remove"></i></button></a>
+                                </div>
+
+                            </td>
+                        </tr>
+                        
+                    <? endforeach; ?>  
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-foot">
+
+            <?php echo $this->paginator; ?>
+
+            <div class="clearfix"></div> 
+
+        </div>
+    </div>
+<script>
+    $(function(){
+        $('#list-usuarios').dataTable({
+            "oLanguage": {
+                "sUrl": "<?= $this->baseUrl() ?>/js/datatable/dataTables.pt-br.txt"},
+            "iDisplayLength": 50,
+            // "sDom": 'T<"clear">lfrtip',
+            // "oTableTools": {
+            //   "sSwfPath": "../media/swf/copy_csv_xls_pdf.swf"
+            // },
+            "aoColumnDefs": [
+              { 'bSortable': false, 'aTargets': [ 0 ] }
+            ],
+            "aaSorting" : [[0, 'desc']],
+            "bStateSave": true,    
+            
+            "oTableTools": {
+                "aButtons": []
+            }
+        });
+    });
+</script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_financeiro_receita" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Adicionar Movimentação</h4>
+      </div>
+      <div class="modal-body">
+            <form role="form" id="form_entradas" data-bv-onsuccess="onFormSuccess">
+              
+
+              <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <select class="form-control" id="tipo" name="fin_tipo">
+                  <option value="">Escolha o tipo</option>
+                  <option value="receita">Receita</option>
+                  <option value="despesa">Despesa</option>
+                  <option value="despesa">Conta a pagar</option>
+                  <option value="despesa">Conta a receber</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dercricao">Descrição</label>
+                <input type="text" class="form-control" id="fin_descricao"  name ="fin_descricao" placeholder="Descrição">
+              </div>
+              
+              <div class="form-group">
+                <label for="data">Data</label>
+                <input type="text" class="form-control" id="fin_data" name="fin_data" placeholder="Data">
+              </div>
+
+              <div class="form-group">
+                <label for="data">Valor</label>
+                <input type="text" class="form-control" id="fin_valor" name="fin_valor" placeholder="Valor">
+              </div>
+            
+
+              <div class="form-group">
+                <label for="obs">Observação</label>
+                <input type="text" class="form-control" id="fin_obs" name="fin_obs" placeholder="Observação">
+              </div>
+              
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary" id="save_financeiro_receita">Salvar</button>
+      </div>
+
+          </form>
+    </div>
+  </div>
+</div>
+
+
